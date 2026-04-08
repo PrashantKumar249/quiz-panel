@@ -8,6 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
 {
+    // Show all quizzes
+    public function index()
+    {
+        $quizzes = Quiz::all();
+
+        return view('quiz.index', compact('quizzes'));
+    }
+
+
     // Show create form
     public function create()
     {
