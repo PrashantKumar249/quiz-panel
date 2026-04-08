@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuestionController;
-use App\Http\Controllers\UserQuizController;
 use App\Models\Quiz;
 use App\Models\Question;
 
@@ -20,36 +19,19 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| User Routes — Dashboard + Quiz Flow + History
+| Dashboard (User)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-    // STEP 2 & 3: Dashboard — available quizzes dikhao
-    Route::get('/dashboard', [UserQuizController::class, 'dashboard'])
-        ->name('dashboard');
-
-    // STEP 4 & 5: Quiz Start karo
-    Route::post('/user/quiz/{quizId}/start', [UserQuizController::class, 'startQuiz'])
-        ->name('user.quiz.start');
-
-    // STEP 6: Quiz Attempt Page (questions + timer)
-    Route::get('/user/quiz/attempt/{attemptId}', [UserQuizController::class, 'attemptPage'])
-        ->name('user.quiz.attempt');
-
-    // STEP 7: Quiz Submit
-    Route::post('/user/quiz/submit', [UserQuizController::class, 'submitQuiz'])
-        ->name('user.quiz.submit');
-
-    // STEP 7 Result: Result Page
-    Route::get('/user/quiz/result/{attemptId}', [UserQuizController::class, 'resultPage'])
-        ->name('user.quiz.result');
-
-    // STEP 8: History
-    Route::get('/user/history', [UserQuizController::class, 'history'])
-        ->name('user.history');
-
-    // Profile Routes
+/*
+|--------------------------------------------------------------------------
+| Profile Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -62,14 +44,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 */
 Route::middleware(['auth', 'admin'])->group(function () {
 
-    // Admin Dashboard
+    // ✅ Admin Dashboard (STEP 1)
     Route::get('/admin/dashboard', function () {
         $quizCount = Quiz::count();
         $questionCount = Question::count();
 
         return view('admin.dashboard', compact('quizCount', 'questionCount'));
     });
-
     // Quiz
     Route::get('/quiz/create', [QuizController::class, 'create']);
     Route::post('/quiz/store', [QuizController::class, 'store']);
