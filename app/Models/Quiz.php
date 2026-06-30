@@ -10,12 +10,22 @@ class Quiz extends Model
         'title',
         'description',
         'time_limit',
-        'user_id'
+        'user_id',
     ];
 
-    // Relationship
+    /**
+     * Quiz ke saare questions
+     */
     public function questions()
     {
-        return $this->hasMany(\App\Models\Question::class);
+        return $this->hasMany(Question::class);
+    }
+
+    /**
+     * Quiz ke saare attempts (admin results ke liye)
+     */
+    public function attempts()
+    {
+        return $this->hasMany(QuizAttempt::class);
     }
 }

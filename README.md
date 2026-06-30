@@ -1,58 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Quiz Panel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Quiz Management System built with Laravel. This application allows administrators to create and manage quizzes, and users to take quizzes, view their results, and track their quiz history.
 
-## About Laravel
+## Tech Stack
+- **Backend:** Laravel
+- **Frontend:** Blade Templates, Tailwind CSS, Alpine.js
+- **Build Tool:** Vite
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Admin Features
+- **Dashboard:** Overview of the system.
+- **Quiz Management:** Create, edit, and delete quizzes.
+- **Question Management:** Add, edit, and remove questions for specific quizzes.
+- **User Management:** View registered users, check user details, and block/unblock users.
+- **Results Management:** View results for all users, filter by quiz, and check specific attempt details.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### User Features
+- **Authentication:** Secure login and registration.
+- **Dashboard:** View available quizzes to take.
+- **Quiz Attempt:** Interactive quiz interface with a timer.
+- **Instant Results:** View score and result immediately after submission.
+- **History:** Track past quiz attempts and scores.
+- **Profile Management:** Update personal information.
 
-## Learning Laravel
+## How to Setup and Run the Project
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Prerequisites (Things you need)
+- **PHP >= 8.3**
+- **Composer** (to install PHP packages)
+- **Node.js & NPM** (to install frontend designs)
+- **MySQL Database Server** (like Laragon or XAMPP)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Step-by-Step Setup Guide
 
-## Agentic Development
+Open your terminal (CMD) inside the project folder and run these exact commands one by one:
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+#### 1. Copy the setup file
+Run this command to create your configuration file:
+```cmd
+copy .env.example .env
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+#### 2. Create database and update `.env`
+1. Open phpMyAdmin or Laragon database manager.
+2. Create a new empty database named `quiz_panel`.
+3. Open the `.env` file in a text editor (like Notepad or VS Code) and type your MySQL username and password:
+   ```env
+   DB_CONNECTION=mysql
+   DB_DATABASE=quiz_panel
+   DB_USERNAME=your_mysql_username
+   DB_PASSWORD=your_mysql_password
+   ```
 
-## Contributing
+#### 3. Install PHP packages
+```cmd
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### 4. Create security key
+```cmd
+php artisan key:generate
+```
 
-## Code of Conduct
+#### 5. Create database tables and add sample data
+```cmd
+php artisan migrate --seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### 6. Install frontend packages and build designs
+```cmd
+npm install
+npm run build
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### How to Start the Project (Once Setup is Done)
+
+Run these two commands in separate terminal windows to start the application:
+
+1. **Start Laravel Server:**
+   ```cmd
+   php artisan serve
+   ```
+2. **Start Vite Server (for hot-reloading designs):**
+   ```cmd
+   npm run dev
+   ```
+
+*Open your web browser and go to `http://127.0.0.1:8000` to see the website.*
+
+
+
+
+## Routes Overview
+- `/` - Landing Page
+- `/dashboard` - User Dashboard
+- `/user/quiz/...` - Quiz attempt and submission flow
+- `/admin/dashboard` - Admin Dashboard
+- `/admin/quiz/...` - Admin Quiz Management
+- `/admin/questions/...` - Admin Question Management
 
 ## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

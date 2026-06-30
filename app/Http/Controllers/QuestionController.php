@@ -54,9 +54,7 @@ class QuestionController extends Controller
     // Show all questions of a quiz
     public function index($quiz_id)
     {
-        $quiz = Quiz::with('questions')->findOrFail($quiz_id);
-
-        return view('questions.index', compact('quiz'));
+        return redirect()->route('admin.quiz.edit', $quiz_id);
     }
 
     // Show edit form
@@ -81,7 +79,7 @@ class QuestionController extends Controller
 
         $this->questionService->updateQuestion($id, $data);
 
-        return redirect('/questions/'.$request->quiz_id)
+        return redirect()->route('admin.quiz.edit', $request->quiz_id)
             ->with('success', 'Question Updated Successfully!');
     }
 

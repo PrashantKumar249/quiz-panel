@@ -5,8 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserQuizController;
-use App\Models\Quiz;
-use App\Models\Question;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,35 +56,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Admin Routes (Dashboard + Quiz + Questions)
+| Admin Routes (Dashboard + Quiz + Questions + Users + Results)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
     // Admin Dashboard
-    Route::get('/admin/dashboard', function () {
-        $quizCount = Quiz::count();
-        $questionCount = Question::count();
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-        return view('admin.dashboard', compact('quizCount', 'questionCount'));
-    });
+    // ---- Quiz Management ----
+    Route::get('/quiz/create', [QuizController::class, 'create'])->name('quiz.create');
+    Route::post('/quiz/store', [QuizController::class, 'store'])->name('quiz.store');
+    Route::get('/quiz/list', [AdminController::class, 'quizList'])->name('quiz.list');
+    Route::get('/quiz/{id}/edit', [AdminController::class, 'editQuiz'])->name('quiz.edit');
+    Route::post('/quiz/{id}/update', [AdminController::class, 'updateQuiz'])->name('quiz.update');
+    Route::get('/quiz/{id}/delete', [AdminController::class, 'deleteQuiz'])->name('quiz.delete');
 
-    // Quiz
-    Route::get('/quiz/create', [QuizController::class, 'create']);
-    Route::post('/quiz/store', [QuizController::class, 'store']);
-    Route::get('/quiz/list', [QuizController::class, 'index']);
+    // ---- Question Management ---- (specific before dynamic)
+    Route::get('/questions/create/{quiz_id}', [QuestionController::class, 'create'])->name('questions.create');
+    Route::get('/questions/edit/{id}', [QuestionController::class, 'edit'])->name('questions.edit');
+    Route::get('/questions/delete/{id}', [QuestionController::class, 'destroy'])->name('questions.delete');
+    Route::post('/questions/store', [QuestionController::class, 'store'])->name('questions.store');
+    Route::post('/questions/update/{id}', [QuestionController::class, 'update'])->name('questions.update');
+    Route::get('/questions/{quiz_id}', [QuestionController::class, 'index'])->name('questions.index');
 
-    // Questions - Create & Store
-    Route::get('/questions/create/{quiz_id}', [QuestionController::class, 'create']);
-    Route::post('/questions/store', [QuestionController::class, 'store']);
+    // ---- User Management ----
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::get('/users/{id}', [AdminController::class, 'userDetail'])->name('user.detail');
+    Route::post('/users/{id}/toggle-block', [AdminController::class, 'toggleBlock'])->name('user.toggle-block');
 
-    // Questions - List
-    Route::get('/questions/{quiz_id}', [QuestionController::class, 'index']);
-
-    // Questions - Edit / Update / Delete
-    Route::get('/questions/edit/{id}', [QuestionController::class, 'edit']);
-    Route::post('/questions/update/{id}', [QuestionController::class, 'update']);
-    Route::get('/questions/delete/{id}', [QuestionController::class, 'destroy']);
+    // ---- Results ---- (specific before dynamic)
+    Route::get('/results', [AdminController::class, 'results'])->name('results');
+    Route::get('/results/attempt/{attemptId}', [AdminController::class, 'attemptDetail'])->name('attempt.detail');
+    Route::get('/results/{quizId}', [AdminController::class, 'quizResults'])->name('quiz.results');
 });
 
 /*

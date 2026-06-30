@@ -33,14 +33,14 @@ class QuizController extends Controller
         ]);
 
         // Store data
-        Quiz::create([
+        $quiz = Quiz::create([
             'title' => $request->title,
             'description' => $request->description,
             'time_limit' => $request->time_limit,
             'user_id' => Auth::id()
         ]);
 
-        // Redirect with success message
-        return redirect()->back()->with('success', 'Quiz Created Successfully!');
+        // Redirect with success message to the manage page directly
+        return redirect()->route('admin.quiz.edit', $quiz->id)->with('success', 'Quiz Created Successfully! Now you can add questions.');
     }
 }

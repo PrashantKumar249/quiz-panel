@@ -1,73 +1,78 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            📋 My Quiz History
-        </h2>
+        <div class="flex justify-between items-center flex-wrap gap-4">
+            <div>
+                <h2 class="gradient-text" style="font-size:1.6rem;font-weight:800;margin:0;">My Quiz History</h2>
+                <p style="color:#64748b;font-size:0.85rem;margin-top:2px;">Track your past performance and test results</p>
+            </div>
+            <a href="{{ route('dashboard') }}" class="btn-secondary" style="text-decoration:none;">
+                ← Back to Dashboard
+            </a>
+        </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-
-            {{-- Back Button --}}
-            <div class="mb-5">
-                <a href="{{ route('dashboard') }}"
-                   class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-5 rounded-lg transition text-sm">
-                    ← Dashboard par wapas jao
-                </a>
-            </div>
+    <div style="padding:32px 0;">
+        <div class="max-w-7xl mx-auto" style="padding:0 24px;">
 
             @if($history->isEmpty())
-                <div class="bg-white rounded-xl shadow-sm p-12 text-center border border-gray-100">
-                    <p class="text-5xl mb-3">📭</p>
-                    <p class="text-gray-500 text-lg">Abhi tak koi quiz attempt nahi kiya.</p>
-                    <a href="{{ route('dashboard') }}" class="mt-4 inline-block text-indigo-600 font-medium hover:underline">
-                        Quiz dene jao →
+                <div class="glass-card" style="padding:60px;text-align:center;color:#475569;">
+                    <div style="font-size:3.5rem;margin-bottom:16px;">📭</div>
+                    <p style="font-size:1.1rem;color:#cbd5e1;margin-bottom:8px;font-weight:600;">No Attempts Yet</p>
+                    <p style="font-size:0.85rem;color:#64748b;margin-bottom:20px;">Aapne abhi tak koi quiz attempt nahi kiya hai.</p>
+                    <a href="{{ route('dashboard') }}" class="btn-primary" style="text-decoration:none;">
+                        Quiz Dene Jao →
                     </a>
                 </div>
             @else
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <table class="w-full text-sm">
+                {{-- TABLE WRAPPER --}}
+                <div class="glass-card" style="overflow:hidden;margin-bottom:32px;">
+                    <table class="dark-table" style="width:100%;border-collapse:collapse;">
                         <thead>
-                            <tr class="bg-gray-50 border-b border-gray-200">
-                                <th class="text-left px-6 py-3 text-gray-600 font-semibold">#</th>
-                                <th class="text-left px-6 py-3 text-gray-600 font-semibold">Quiz</th>
-                                <th class="text-center px-4 py-3 text-gray-600 font-semibold">Total Q</th>
-                                <th class="text-center px-4 py-3 text-gray-600 font-semibold">✅ Correct</th>
-                                <th class="text-center px-4 py-3 text-gray-600 font-semibold">❌ Wrong</th>
-                                <th class="text-center px-4 py-3 text-gray-600 font-semibold">Score</th>
-                                <th class="text-center px-4 py-3 text-gray-600 font-semibold">Date</th>
-                                <th class="text-center px-4 py-3 text-gray-600 font-semibold">Action</th>
+                            <tr>
+                                <th style="text-align:left;">#</th>
+                                <th style="text-align:left;">Quiz Name</th>
+                                <th style="text-align:center;">Total Q</th>
+                                <th style="text-align:center;">✅ Correct</th>
+                                <th style="text-align:center;">❌ Wrong</th>
+                                <th style="text-align:center;">Score</th>
+                                <th style="text-align:center;">Date & Time</th>
+                                <th style="text-align:center;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($history as $index => $attempt)
-                                <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
-                                    <td class="px-6 py-4 text-gray-500">{{ $index + 1 }}</td>
-                                    <td class="px-6 py-4 font-medium text-gray-800">
-                                        {{ $attempt->quiz->title }}
+                                <tr>
+                                    <td style="color:#475569;font-size:0.8rem;width:50px;">{{ $index + 1 }}</td>
+                                    <td>
+                                        <span style="color:#e2e8f0;font-weight:600;font-size:0.9rem;">{{ $attempt->quiz->title }}</span>
                                     </td>
-                                    <td class="px-4 py-4 text-center text-gray-600">
+                                    <td style="text-align:center;font-weight:600;">
                                         {{ $attempt->total_questions }}
                                     </td>
-                                    <td class="px-4 py-4 text-center font-semibold text-green-600">
+                                    <td style="text-align:center;font-weight:700;color:#4ade80;">
                                         {{ $attempt->correct_answers }}
                                     </td>
-                                    <td class="px-4 py-4 text-center font-semibold text-red-500">
+                                    <td style="text-align:center;font-weight:700;color:#f87171;">
                                         {{ $attempt->wrong_answers }}
                                     </td>
-                                    <td class="px-4 py-4 text-center">
-                                        <span class="px-3 py-1 rounded-full text-sm font-bold
-                                            {{ $attempt->score >= 70 ? 'bg-green-100 text-green-700' : ($attempt->score >= 40 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700') }}">
-                                            {{ $attempt->score }}%
-                                        </span>
+                                    <td style="text-align:center;">
+                                        @if($attempt->score >= 70)
+                                            <span class="badge-green">🏆 {{ $attempt->score }}%</span>
+                                        @elseif($attempt->score >= 40)
+                                            <span class="badge-yellow">⚡ {{ $attempt->score }}%</span>
+                                        @else
+                                            <span class="badge-red">⚠️ {{ $attempt->score }}%</span>
+                                        @endif
                                     </td>
-                                    <td class="px-4 py-4 text-center text-gray-500 text-xs">
+                                    <td style="text-align:center;color:#64748b;font-size:0.8rem;">
                                         {{ $attempt->created_at->format('d M Y, h:i A') }}
                                     </td>
-                                    <td class="px-4 py-4 text-center">
+                                    <td style="text-align:center;">
                                         <a href="{{ route('user.quiz.result', $attempt->id) }}"
-                                           class="text-indigo-600 hover:underline text-xs font-medium">
-                                            View Result
+                                           style="background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;text-decoration:none;transition:all 0.2s;"
+                                           onmouseover="this.style.background='rgba(99,102,241,0.25)'"
+                                           onmouseout="this.style.background='rgba(99,102,241,0.15)'">
+                                            🔍 View Result
                                         </a>
                                     </td>
                                 </tr>
@@ -76,20 +81,24 @@
                     </table>
                 </div>
 
-                {{-- Summary Stats --}}
-                <div class="mt-6 grid grid-cols-3 gap-4">
-                    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 text-center">
-                        <p class="text-3xl font-bold text-indigo-600">{{ $history->count() }}</p>
-                        <p class="text-gray-500 text-sm mt-1">Total Attempts</p>
+                {{-- SUMMARY STATS --}}
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+                    
+                    <div class="glass-card" style="padding:24px;text-align:center;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                        <p style="color:#64748b;font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-top:0;margin-bottom:8px;">Total Attempts</p>
+                        <p style="font-size:2.5rem;font-weight:800;color:#818cf8;line-height:1;margin:0;">{{ $history->count() }}</p>
                     </div>
-                    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 text-center">
-                        <p class="text-3xl font-bold text-green-600">{{ round($history->avg('score')) }}%</p>
-                        <p class="text-gray-500 text-sm mt-1">Average Score</p>
+
+                    <div class="glass-card" style="padding:24px;text-align:center;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                        <p style="color:#64748b;font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-top:0;margin-bottom:8px;">Average Score</p>
+                        <p style="font-size:2.5rem;font-weight:800;color:#22c55e;line-height:1;margin:0;">{{ round($history->avg('score')) }}%</p>
                     </div>
-                    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 text-center">
-                        <p class="text-3xl font-bold text-yellow-600">{{ $history->max('score') }}%</p>
-                        <p class="text-gray-500 text-sm mt-1">Best Score</p>
+
+                    <div class="glass-card" style="padding:24px;text-align:center;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                        <p style="color:#64748b;font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-top:0;margin-bottom:8px;">Best Score</p>
+                        <p style="font-size:2.5rem;font-weight:800;color:#eab308;line-height:1;margin:0;">{{ $history->max('score') }}%</p>
                     </div>
+
                 </div>
             @endif
 
